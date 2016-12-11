@@ -1,6 +1,3 @@
-{-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE TypeOperators   #-}
-
 module Main (main) where
 
 import Codec.Picture
@@ -35,12 +32,17 @@ computeCoords :: Int -> [Int] -> [Int]
 computeCoords shift ds =
   map (\x -> x + shift) $ scanl (+) 0 ds
 
+
 coords :: Int -> Int -> (Int -> [Int]) -> [Int]
 coords n shift f =
   computeCoords shift (f n)
 
 
+xCoords :: Int -> Int -> [Int]
 xCoords n shift = coords n shift dxs
+
+
+yCoords :: Int -> Int -> [Int]
 yCoords n shift = coords n shift dys
 
 
@@ -55,28 +57,36 @@ coordsArray size =
   in
     array ((0, 0), (size - 1, size - 1)) $ zip ix (map isPrime [1..n^2])
 
+
 pixelColor :: Bool -> Word8
 pixelColor isPrime
-  | isPrime == True = fromIntegral 0
-  | otherwise = fromIntegral 255
+  | isPrime == True = 0
+  | otherwise = 255
 
-imageCreator :: Int -> String -> (Array (Int, Int) Bool) -> IO ()
-imageCreator size path coords =
+
+renderPixel :: (Array (Int, Int) Bool) -> Int -> Int -> PixelRGB8
+renderPixel coords x y =
   let
-    pixelRenderer x y =
-      let
-        isPrime = coords!(x,y)
-        color = pixelColor isPrime
-      in PixelRGB8 color color color
+    isPrime = coords!(x,y)
+    color = pixelColor isPrime
   in
-    writePng path $ generateImage pixelRenderer size size
+    PixelRGB8 color color color
+
+
+createImage :: Int -> String -> (Array (Int, Int) Bool) -> IO ()
+createImage size path coords =
+  let
+    renderer = renderPixel coords
+    image = generateImage renderer size size
+  in
+    writePng path image
 
 
 main :: IO ()
 main =
   let
     path = "out.png"
-    size = 1023
+    size = 2001
     coords = coordsArray size
   in
-    imageCreator size path coords
+    createImage size path coords
