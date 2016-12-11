@@ -33,11 +33,11 @@ dys n =
 
 computeCoords :: Int -> [Int] -> [Int]
 computeCoords shift ds =
-	map (\x -> x + shift) $ scanl (+) 0 ds
+  map (\x -> x + shift) $ scanl (+) 0 ds
 
 coords :: Int -> Int -> (Int -> [Int]) -> [Int]
 coords n shift f =
-	computeCoords shift (f n)
+  computeCoords shift (f n)
 
 
 xCoords n shift = coords n shift dxs
@@ -46,14 +46,14 @@ yCoords n shift = coords n shift dys
 
 coordsArray :: Int -> (Array (Int, Int) Bool)
 coordsArray size =
-	let
-		n = size
-		shift = quot size 2
-		xs = xCoords n shift
-		ys = yCoords n shift
-		ix = zip xs ys
-	in
-		array ((0, 0), (size - 1, size - 1)) $ zip ix (map isPrime [1..n^2])
+  let
+    n = size
+    shift = quot size 2
+    xs = xCoords n shift
+    ys = yCoords n shift
+    ix = zip xs ys
+  in
+    array ((0, 0), (size - 1, size - 1)) $ zip ix (map isPrime [1..n^2])
 
 pixelColor :: Bool -> Word8
 pixelColor isPrime
@@ -74,9 +74,9 @@ imageCreator size path coords =
 
 main :: IO ()
 main =
-	let
-		path = "out.png"
-		size = 1023
-		coords = coordsArray size
+  let
+    path = "out.png"
+    size = 1023
+    coords = coordsArray size
   in
-		imageCreator size path coords
+    imageCreator size path coords
