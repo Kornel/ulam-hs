@@ -1,0 +1,31 @@
+name:                ulam-hs
+
+version:             0.1.0.0
+
+synopsis:            Ulam spiral
+
+homepage:            http://github.com/kornel/ulam-hs
+
+license:             MIT
+
+license-file:        LICENSE
+
+author:              Kornel Kielczewski
+
+maintainer:          kornel.k@plusnet.pl
+
+build-type:          Simple
+
+extra-source-files:  ChangeLog.md, README.md
+
+cabal-version:       >=1.10
+
+executable ulam-hs
+  main-is:             Main.hs
+  
+  build-depends:       base >=4.9 && <4.10
+  
+  hs-source-dirs:      src
+  
+  default-language:    Haskell2010
+  
