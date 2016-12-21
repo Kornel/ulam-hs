@@ -59,16 +59,16 @@ coordsArray size =
 
 
 pixelColor :: Bool -> Word8
-pixelColor isPrime
-  | isPrime == True = 0
-  | otherwise = 255
+pixelColor setPixel
+  | setPixel == True = 0
+  | otherwise        = 255
 
 
 renderPixel :: (Array (Int, Int) Bool) -> Int -> Int -> PixelRGB8
 renderPixel coords x y =
   let
-    isPrime = coords!(x,y)
-    color = pixelColor isPrime
+    setPixel = coords!(x,y)
+    color = pixelColor setPixel
   in
     PixelRGB8 color color color
 
@@ -82,11 +82,17 @@ createImage size path coords =
     writePng path image
 
 
+outputPath :: [String] -> String
+outputPath [] = "out.png"
+outputPath (x:_) = x
+
+
 main :: IO ()
-main =
+main = do
+  args <- getArgs
   let
-    path = "out.png"
+    path = outputPath args
     size = 2001
     coords = coordsArray size
-  in
-    createImage size path coords
+  putStrLn $ "Writing spiral of width " ++ (show size) ++ " at " ++ path
+  createImage size path coords
